@@ -19,9 +19,6 @@ Drawer::Drawer() {
 //    cube->setPosition(0,0,-10);
 //    matrix = Matrix::createPerspectiveCamera(45,368/640.0f,1.0f,500.0f);
     matrix = Matrix::createOrthogonalCamera(-1,1,1*640/368.0f,-1*640/368.0f,1,500);
-    Matrix view = Matrix::createViewMatrix(-5,10,-10,0,0,0,0,5,0);
-    view *= matrix;
-    matrix = view;
 }
 
 void Drawer::init() {
@@ -33,8 +30,11 @@ void Drawer::init() {
 }
 
 void Drawer::draw() {
+    angle += 0.0001f;
+    Matrix view = Matrix::createViewMatrix(10*sin(angle),10*cos(angle),5,0,0,0,1,1,1);
+
     glUseProgram(programId);
-    glUniformMatrix4fv(glMatrix,1,GL_FALSE,matrix.data());
+    glUniformMatrix4fv(glMatrix,1,GL_TRUE,(matrix * view).data());
     glEnableVertexAttribArray(glVert);
     glVertexAttribPointer(glVert,3,GL_FLOAT,GL_FALSE,0,cube->vertex);
     glEnableVertexAttribArray(glColor);

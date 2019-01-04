@@ -25,6 +25,9 @@ private:
     int glMatrix;
 
     Matrix matrix;
+    Matrix view;
+    float angle{0.0f};
+    float angle2{0.0f};
 };
 
 

@@ -43,6 +43,8 @@ public:
 
     Matrix& operator*=(Matrix& mat);
 
+    Matrix operator*(Matrix& mat);
+
     static Matrix createViewMatrix(float posX,float posY,float posZ,
             float lookAtX,float lookAtY,float lookAtZ,
             float upX,float upY,float upZ);

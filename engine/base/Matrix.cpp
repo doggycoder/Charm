@@ -13,8 +13,8 @@ Matrix Matrix::createPerspectiveCamera(float fov, float aspect, float near, floa
     mat[M00] = 1/(aspect*tanf(fov/2));
     mat[M11] = 1/tanf(fov/2);
     mat[M22] = - (far + near) / (far - near);
-    mat[M23] = - 2 * far * near / (far - near);
-    mat[M32] = -1.0f;
+    mat[M32] = - 2 * far * near / (far - near);
+    mat[M23] = -1.0f;
     mat[M33] = 0.0f;
     return mat;
 }
@@ -24,9 +24,9 @@ Matrix Matrix::createOrthogonalCamera(float left, float right, float top, float 
     mat[M00] = 2/(right-left);
     mat[M11] = 2/(top - bottom);
     mat[M22] = -2/(far-near);
-    mat[M30] = - (left + right)/(right - left);
-    mat[M31] = - (top + bottom)/(top - bottom);
-    mat[M32] = - (near + far)/(far - near);
+    mat[M03] = - (left + right)/(right - left);
+    mat[M13] = - (top + bottom)/(top - bottom);
+    mat[M23] = - (near + far)/(far - near);
     return mat;
 }
 
@@ -42,20 +42,20 @@ Matrix Matrix::createViewMatrix(float posX, float posY, float posZ, float target
 
     Matrix mat;
     mat[M00] = U.x;
-    mat[M01] = U.y;
-    mat[M02] = U.z;
+    mat[M10] = U.y;
+    mat[M20] = U.z;
 
-    mat[M10] = V.x;
+    mat[M01] = V.x;
     mat[M11] = V.y;
-    mat[M12] = V.z;
+    mat[M21] = V.z;
 
-    mat[M20] = N.x;
-    mat[M21] = N.y;
+    mat[M02] = N.x;
+    mat[M12] = N.y;
     mat[M22] = N.z;
 
     mat[M03] = U.dot(position);
     mat[M13] = V.dot(position);
-    mat[M32] = N.dot(position);
+    mat[M23] = N.dot(position);
     return mat;
 }
 
@@ -70,6 +70,12 @@ Matrix& Matrix::operator=(Matrix mat) {
 }
 
 Matrix& Matrix::operator*=(Matrix &mat) {
+    Matrix tmp = *this * mat;
+    *this = tmp;
+    return *this;
+}
+
+Matrix Matrix::operator*(Matrix &mat) {
     Matrix temp;
     temp[M00] = value[M00]*mat[M00] + value[M01]*mat[M10] + value[M02]*mat[M20] + value[M03]*mat[M30];
     temp[M10] = value[M10]*mat[M00] + value[M11]*mat[M10] + value[M12]*mat[M20] + value[M13]*mat[M30];
@@ -90,6 +96,5 @@ Matrix& Matrix::operator*=(Matrix &mat) {
     temp[M13] = value[M10]*mat[M03] + value[M11]*mat[M13] + value[M12]*mat[M23] + value[M13]*mat[M33];
     temp[M23] = value[M20]*mat[M03] + value[M21]*mat[M13] + value[M22]*mat[M23] + value[M23]*mat[M33];
     temp[M33] = value[M30]*mat[M03] + value[M31]*mat[M13] + value[M32]*mat[M23] + value[M33]*mat[M33];
-    *this = temp;
-    return *this;
+    return temp;
 }
