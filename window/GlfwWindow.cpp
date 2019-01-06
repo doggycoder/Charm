@@ -5,6 +5,7 @@
 #include "GlfwWindow.h"
 #include <iostream>
 #include <GLFW/glfw3.h>
+#include <thread>
 
 GlfwWindow::GlfwWindow() {
 
@@ -86,15 +87,18 @@ void GlfwWindow::startLoop() {
     //注册鼠标光标事件
     glfwSetCursorPosCallback(window,callbackCursorPos);
 
+
     if(init!=nullptr){
         init(width,height);
     }
 
     glEnable(GL_DEPTH_TEST);
+    double lastTime = glfwGetTime();
     //渲染循环
     while(!glfwWindowShouldClose(window))
     {
         // 渲染指令
+        double startTime = glfwGetTime();
         glClearColor(0.8f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
@@ -104,6 +108,8 @@ void GlfwWindow::startLoop() {
         // 检查并调用事件，交换缓冲
         glfwSwapBuffers(window);//检查触发事件
         glfwPollEvents();    //交换颜色缓冲
+        int spendTime = static_cast<int>((glfwGetTime() - startTime) * 1000000);
+        std::this_thread::sleep_for(std::chrono::microseconds(16667 - spendTime));
     }
 
     //释放/删除之前的分配的所有资源

@@ -2,9 +2,6 @@
 // Created by wuwang on 18-12-24.
 //
 
-#include "Vec.h"
-#include "cmath"
-
 template <typename T> Vec2<T>::Vec2(T x, T y) {
     this->x = x;
     this->y = y;
@@ -54,10 +51,10 @@ template <typename T> Vec3<T>& Vec3<T>::operator-=(Vec3 &a){
     return *this;
 };
 
-template <typename T> Vec3<T>& Vec3<T>::operator*=(float length) {
-    x *= length;
-    y *= length;
-    z *= length;
+template <typename T> Vec3<T>& Vec3<T>::operator*=(float scale) {
+    x *= scale;
+    y *= scale;
+    z *= scale;
     return *this;
 }
 
@@ -94,4 +91,25 @@ template <typename T> Vec3<T> Vec3<T>::copy() {
 
 template <typename T> T Vec3<T>::dot(Vec3 &a) {
     return x*a.x + y*a.y + z*a.z;
+}
+
+template <typename T, int val> Vec4<T,val>::Vec4(T x,T y,T z,T w){
+    this->x = x;
+    this->y = y;
+    this->z = z;
+    this->w = w;
+}
+
+template <typename T, int val> Vec4<T,val>::Vec4(T d) {
+    x = d;
+    y = d;
+    z = d;
+    w = d;
+}
+
+template <typename T, int val> Vec4<T,val>::Vec4(Vec3<T> &in, T d) {
+    x = in.x;
+    y = in.y;
+    z = in.z;
+    w = d;
 }

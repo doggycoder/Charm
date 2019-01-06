@@ -7,6 +7,7 @@
 
 #include "base/Base.h"
 #include "base/Matrix.h"
+#include "Rect.h"
 
 class Cube;
 class Matrix;
@@ -19,6 +20,7 @@ public:
 
 private:
     SPtr<Cube> cube;
+    SPtr<Rect> rect;
     int programId;
     int glVert;
     int glColor;
@@ -26,6 +28,7 @@ private:
 
     Matrix matrix;
     Matrix view;
+    Matrix model;
     float angle{0.0f};
     float angle2{0.0f};
 };

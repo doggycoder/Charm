@@ -45,6 +45,15 @@ public:
 
     Matrix operator*(Matrix& mat);
 
+    Matrix& scale(float x,float y,float z);
+    Matrix& scale(float scale);
+    Matrix& translate(float x,float y,float z);
+    Matrix& rotate(float x,float y,float z);
+
+    Matrix& transpose();
+
+    Matrix copy();
+
     static Matrix createViewMatrix(float posX,float posY,float posZ,
             float lookAtX,float lookAtY,float lookAtZ,
             float upX,float upY,float upZ);

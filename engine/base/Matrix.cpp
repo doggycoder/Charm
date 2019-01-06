@@ -36,26 +36,26 @@ Matrix Matrix::createViewMatrix(float posX, float posY, float posZ, float target
     Vec3f target(targetX,targetY,targetZ);
     Vec3f up(upX,upY,upZ);
 
-    Vec3f N = (target - position).normalize();
+    Vec3f N = (position - target).normalize();
     Vec3f U = up.copy().cross(N).normalize();
     Vec3f V = N.copy().cross(U).normalize();
 
     Matrix mat;
     mat[M00] = U.x;
-    mat[M10] = U.y;
-    mat[M20] = U.z;
+    mat[M01] = U.y;
+    mat[M02] = U.z;
 
-    mat[M01] = V.x;
+    mat[M10] = V.x;
     mat[M11] = V.y;
-    mat[M21] = V.z;
+    mat[M12] = V.z;
 
-    mat[M02] = N.x;
-    mat[M12] = N.y;
+    mat[M20] = N.x;
+    mat[M21] = N.y;
     mat[M22] = N.z;
 
-    mat[M03] = U.dot(position);
-    mat[M13] = V.dot(position);
-    mat[M23] = N.dot(position);
+    mat[M03] = - U.dot(position);
+    mat[M13] = - V.dot(position);
+    mat[M23] = - N.dot(position);
     return mat;
 }
 
@@ -96,5 +96,73 @@ Matrix Matrix::operator*(Matrix &mat) {
     temp[M13] = value[M10]*mat[M03] + value[M11]*mat[M13] + value[M12]*mat[M23] + value[M13]*mat[M33];
     temp[M23] = value[M20]*mat[M03] + value[M21]*mat[M13] + value[M22]*mat[M23] + value[M23]*mat[M33];
     temp[M33] = value[M30]*mat[M03] + value[M31]*mat[M13] + value[M32]*mat[M23] + value[M33]*mat[M33];
+    return temp;
+}
+
+Matrix& Matrix::scale(float x, float y, float z) {
+    Matrix temp;
+    temp[M00] = x;
+    temp[M11] = y;
+    temp[M22] = z;
+    *this *= temp;
+    return *this;
+}
+
+Matrix& Matrix::scale(float scale) {
+    return this->scale(scale,scale,scale);
+}
+
+Matrix& Matrix::translate(float x, float y, float z) {
+    Matrix temp;
+    temp[M03] = x;
+    temp[M13] = y;
+    temp[M23] = z;
+    *this *= temp;
+    return *this;
+}
+
+Matrix& Matrix::rotate(float x, float y, float z) {
+    Matrix temp;
+    auto M_PI_180 = (float) (M_PI / 180.0f);
+    x *= M_PI_180;
+    y *= M_PI_180;
+    z *= M_PI_180;
+    float cx = cosf(x);
+    float sx = sinf(x);
+    float cy = cosf(y);
+    float sy = sinf(y);
+    float cz = cosf(z);
+    float sz = sinf(z);
+    float cx_sy = cx * sy;
+    float sx_sy = sx * sy;
+
+    temp[M00]  =   cy * cz;
+    temp[M10]  =  -cy * sz;
+    temp[M20]  =   sy;
+
+    temp[M01]  =  cx_sy * cz + cx * sz;
+    temp[M11]  = -cx_sy * sz + cx * cz;
+    temp[M21]  =  -sx * cy;
+
+    temp[M02]  = -sx_sy * cz + sx * sz;
+    temp[M12]  =  sx_sy * sz + sx * cz;
+    temp[M22] =  cx * cy;
+
+    *this *= temp;
+    return *this;
+}
+
+Matrix& Matrix::transpose() {
+    std::swap(value[M01],value[M10]);
+    std::swap(value[M02],value[M20]);
+    std::swap(value[M03],value[M30]);
+    std::swap(value[M12],value[M21]);
+    std::swap(value[M13],value[M31]);
+    std::swap(value[M23],value[M32]);
+    return *this;
+}
+
+Matrix Matrix::copy() {
+    Matrix temp = *this;
     return temp;
 }
