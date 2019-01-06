@@ -20,7 +20,7 @@ Drawer::Drawer() {
 //    matrix = Matrix::createPerspectiveCamera(45,368/640.0f,1.0f,500.0f);
     matrix = Matrix::createOrthogonalCamera(-1,1,1*640/368.0f,-1*640/368.0f,1,500);
 //    model.translate(0.5f,0.5f,-8);
-    model.scale(1.0f);
+//    model.scale(1.0f);
     model.rotate(45,0,135);
 }
 
@@ -37,7 +37,7 @@ void Drawer::draw() {
     Matrix view = Matrix::createViewMatrix(5 * sinf(angle),0,5 * cosf(angle),0,0,0,0,1,0);
 
     glUseProgram(programId);
-    glUniformMatrix4fv(glMatrix,1,GL_FALSE,(matrix * view * model).transpose().data());
+    glUniformMatrix4fv(glMatrix,1,GL_FALSE,(model * view * matrix).data());
     glEnableVertexAttribArray(glVert);
     glVertexAttribPointer(glVert,3,GL_FLOAT,GL_FALSE,0,cube->vertex);
     glEnableVertexAttribArray(glColor);

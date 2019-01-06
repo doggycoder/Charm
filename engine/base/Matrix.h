@@ -10,20 +10,20 @@ protected:
     float value[16];
 public:
     static const int M00 = 0;
-    static const int M01 = 1;
-    static const int M02 = 2;
-    static const int M03 = 3;
-    static const int M10 = 4;
+    static const int M10 = 1;
+    static const int M20 = 2;
+    static const int M30 = 3;
+    static const int M01 = 4;
     static const int M11 = 5;
-    static const int M12 = 6;
-    static const int M13 = 7;
-    static const int M20 = 8;
-    static const int M21 = 9;
+    static const int M21 = 6;
+    static const int M31 = 7;
+    static const int M02 = 8;
+    static const int M12 = 9;
     static const int M22 = 10;
-    static const int M23 = 11;
-    static const int M30 = 12;
-    static const int M31 = 13;
-    static const int M32 = 14;
+    static const int M32 = 11;
+    static const int M03 = 12;
+    static const int M13 = 13;
+    static const int M23 = 14;
     static const int M33 = 15;
 
     Matrix():value{1,0,0,0,

@@ -77,25 +77,25 @@ Matrix& Matrix::operator*=(Matrix &mat) {
 
 Matrix Matrix::operator*(Matrix &mat) {
     Matrix temp;
-    temp[M00] = value[M00]*mat[M00] + value[M01]*mat[M10] + value[M02]*mat[M20] + value[M03]*mat[M30];
-    temp[M10] = value[M10]*mat[M00] + value[M11]*mat[M10] + value[M12]*mat[M20] + value[M13]*mat[M30];
-    temp[M20] = value[M20]*mat[M00] + value[M21]*mat[M10] + value[M22]*mat[M20] + value[M23]*mat[M30];
-    temp[M30] = value[M30]*mat[M00] + value[M31]*mat[M10] + value[M32]*mat[M20] + value[M33]*mat[M30];
+    temp[M00] = value[M00]*mat[M00] + value[M10]*mat[M01] + value[M20]*mat[M02] + value[M30]*mat[M03];
+    temp[M01] = value[M01]*mat[M00] + value[M11]*mat[M01] + value[M21]*mat[M02] + value[M31]*mat[M03];
+    temp[M02] = value[M02]*mat[M00] + value[M12]*mat[M01] + value[M22]*mat[M02] + value[M32]*mat[M03];
+    temp[M03] = value[M03]*mat[M00] + value[M13]*mat[M01] + value[M23]*mat[M02] + value[M33]*mat[M03];
 
-    temp[M01] = value[M00]*mat[M01] + value[M01]*mat[M11] + value[M02]*mat[M21] + value[M03]*mat[M31];
-    temp[M11] = value[M10]*mat[M01] + value[M11]*mat[M11] + value[M12]*mat[M21] + value[M13]*mat[M31];
-    temp[M21] = value[M20]*mat[M01] + value[M21]*mat[M11] + value[M22]*mat[M21] + value[M23]*mat[M31];
-    temp[M31] = value[M30]*mat[M01] + value[M31]*mat[M11] + value[M32]*mat[M21] + value[M33]*mat[M31];
+    temp[M10] = value[M00]*mat[M10] + value[M10]*mat[M11] + value[M20]*mat[M12] + value[M30]*mat[M13];
+    temp[M11] = value[M01]*mat[M10] + value[M11]*mat[M11] + value[M21]*mat[M12] + value[M31]*mat[M13];
+    temp[M12] = value[M02]*mat[M10] + value[M12]*mat[M11] + value[M22]*mat[M12] + value[M32]*mat[M13];
+    temp[M13] = value[M03]*mat[M10] + value[M13]*mat[M11] + value[M23]*mat[M12] + value[M33]*mat[M13];
 
-    temp[M02] = value[M00]*mat[M02] + value[M01]*mat[M12] + value[M02]*mat[M22] + value[M03]*mat[M32];
-    temp[M12] = value[M10]*mat[M02] + value[M11]*mat[M12] + value[M12]*mat[M22] + value[M13]*mat[M32];
-    temp[M22] = value[M20]*mat[M02] + value[M21]*mat[M12] + value[M22]*mat[M22] + value[M23]*mat[M32];
-    temp[M32] = value[M30]*mat[M02] + value[M31]*mat[M12] + value[M32]*mat[M22] + value[M33]*mat[M32];
+    temp[M20] = value[M00]*mat[M20] + value[M10]*mat[M21] + value[M20]*mat[M22] + value[M30]*mat[M23];
+    temp[M21] = value[M01]*mat[M20] + value[M11]*mat[M21] + value[M21]*mat[M22] + value[M31]*mat[M23];
+    temp[M22] = value[M02]*mat[M20] + value[M12]*mat[M21] + value[M22]*mat[M22] + value[M32]*mat[M23];
+    temp[M23] = value[M03]*mat[M20] + value[M13]*mat[M21] + value[M23]*mat[M22] + value[M33]*mat[M23];
 
-    temp[M03] = value[M00]*mat[M03] + value[M01]*mat[M13] + value[M02]*mat[M23] + value[M03]*mat[M33];
-    temp[M13] = value[M10]*mat[M03] + value[M11]*mat[M13] + value[M12]*mat[M23] + value[M13]*mat[M33];
-    temp[M23] = value[M20]*mat[M03] + value[M21]*mat[M13] + value[M22]*mat[M23] + value[M23]*mat[M33];
-    temp[M33] = value[M30]*mat[M03] + value[M31]*mat[M13] + value[M32]*mat[M23] + value[M33]*mat[M33];
+    temp[M30] = value[M00]*mat[M30] + value[M10]*mat[M31] + value[M20]*mat[M32] + value[M30]*mat[M33];
+    temp[M31] = value[M01]*mat[M30] + value[M11]*mat[M31] + value[M21]*mat[M32] + value[M31]*mat[M33];
+    temp[M32] = value[M02]*mat[M30] + value[M12]*mat[M31] + value[M22]*mat[M32] + value[M32]*mat[M33];
+    temp[M33] = value[M03]*mat[M30] + value[M13]*mat[M31] + value[M23]*mat[M32] + value[M33]*mat[M33];
     return temp;
 }
 
