@@ -23,7 +23,7 @@ Matrix Matrix::createOrthogonalCamera(float left, float right, float top, float 
     Matrix mat;
     mat[M00] = 2/(right-left);
     mat[M11] = 2/(top - bottom);
-    mat[M22] = -2/(far-near);
+    mat[M22] = - 2/(far-near);
     mat[M03] = - (left + right)/(right - left);
     mat[M13] = - (top + bottom)/(top - bottom);
     mat[M23] = - (near + far)/(far - near);
@@ -36,9 +36,11 @@ Matrix Matrix::createViewMatrix(float posX, float posY, float posZ, float target
     Vec3f target(targetX,targetY,targetZ);
     Vec3f up(upX,upY,upZ);
 
-    Vec3f N = (position - target).normalize();
-    Vec3f U = up.copy().cross(N).normalize();
-    Vec3f V = N.copy().cross(U).normalize();
+    Vec3f N = (target - position).normalize();
+    Vec3f U = N.copy().cross(up).normalize();
+    Vec3f V = U.copy().cross(N).normalize();
+
+    N = -N;
 
     Matrix mat;
     mat[M00] = U.x;
@@ -53,9 +55,9 @@ Matrix Matrix::createViewMatrix(float posX, float posY, float posZ, float target
     mat[M21] = N.y;
     mat[M22] = N.z;
 
-    mat[M03] = - U.dot(position);
-    mat[M13] = - V.dot(position);
-    mat[M23] = - N.dot(position);
+    mat[M03] =  -U.dot(position);
+    mat[M13] =  -V.dot(position);
+    mat[M23] =  -N.dot(position);
     return mat;
 }
 
@@ -140,13 +142,45 @@ Matrix& Matrix::rotate(float x, float y, float z) {
     temp[M10]  =  -cy * sz;
     temp[M20]  =   sy;
 
-    temp[M01]  =  cx_sy * cz + cx * sz;
-    temp[M11]  = -cx_sy * sz + cx * cz;
+    temp[M01]  =  sx_sy * cz + cx * sz;
+    temp[M11]  = -sx_sy * sz + cx * cz;
     temp[M21]  =  -sx * cy;
 
-    temp[M02]  = -sx_sy * cz + sx * sz;
-    temp[M12]  =  sx_sy * sz + sx * cz;
+    temp[M02]  = -cx_sy * cz + sx * sz;
+    temp[M12]  =  cx_sy * sz + sx * cz;
     temp[M22] =  cx * cy;
+
+    *this *= temp;
+    return *this;
+}
+
+Matrix& Matrix::rotateEuler(float yaw, float pitch, float roll) {
+    Matrix temp;
+    auto M_PI_180 = M_PI / 180.0f;
+    yaw   *= M_PI_180;
+    pitch *= M_PI_180;
+    roll  *= M_PI_180;
+    float cx = cosf(pitch);
+    float sx = sinf(pitch);
+    float cy = cosf(yaw);
+    float sy = sinf(yaw);
+    float cz = cosf(roll);
+    float sz = sinf(roll);
+    float sx_sy = sx * sy;
+    float sy_cz = sy * cz;
+    float cy_sz = cy * sz;
+
+    temp[M00]  =   cy * cz + sx_sy * sz;
+    temp[M10]  =   cx * sz;
+    temp[M20]  =   sx * cy_sz - sy_cz;
+
+    temp[M01]  =  sx_sy * cz - cy_sz;
+    temp[M11]  =  cx * cz;
+    temp[M21]  =  sx * cy * cz + sy * sz;
+
+    temp[M02]  =  sy_cz;
+    temp[M12]  =  -sx;
+    temp[M22]  =  cy * cz;
 
     *this *= temp;
     return *this;

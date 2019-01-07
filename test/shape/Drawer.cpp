@@ -18,10 +18,11 @@ Drawer::Drawer() {
     cube = std::make_shared<Cube>(1.0f);
 //    cube->setPosition(-1,1,-10);
 //    matrix = Matrix::createPerspectiveCamera(45,368/640.0f,1.0f,500.0f);
-    matrix = Matrix::createOrthogonalCamera(-1,1,1*640/368.0f,-1*640/368.0f,1,500);
-//    model.translate(0.5f,0.5f,-8);
-//    model.scale(1.0f);
-    model.rotate(45,0,135);
+    matrix = Matrix::createOrthogonalCamera(-1,1,1*640.0f/368,-1*640.0f/368,1,500);
+//    model.translate(0.5f,0.5f,0);
+    model.scale(1.0f);
+    model.rotate(45.0f,0,135.0f);
+//    model.rotate(0,0,45);
 }
 
 void Drawer::init() {
@@ -34,7 +35,7 @@ void Drawer::init() {
 
 void Drawer::draw() {
     angle += M_PI /90;
-    Matrix view = Matrix::createViewMatrix(5 * sinf(angle),0,5 * cosf(angle),0,0,0,0,1,0);
+    Matrix view = Matrix::createViewMatrix(5*cosf(angle),0,5*sinf(angle),0,0,0,0,1,0);
 
     glUseProgram(programId);
     glUniformMatrix4fv(glMatrix,1,GL_FALSE,(model * view * matrix).data());

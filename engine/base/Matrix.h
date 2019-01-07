@@ -49,6 +49,7 @@ public:
     Matrix& scale(float scale);
     Matrix& translate(float x,float y,float z);
     Matrix& rotate(float x,float y,float z);
+    Matrix& rotateEuler(float yaw,float pitch,float roll);
 
     Matrix& transpose();
 

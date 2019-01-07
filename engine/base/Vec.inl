@@ -62,6 +62,20 @@ template <typename T> Vec3<T> Vec3<T>::operator-(Vec3 &a){
     return {x - a.x,y - a.y,z - a.z};
 };
 
+template <typename T> Vec3<T> Vec3<T>::operator-(){
+    x = -x;
+    y = -y;
+    z = -z;
+    return *this;
+};
+
+template <typename T> Vec3<T>& Vec3<T>::operator=(Vec3 a){
+    x = a.x;
+    y = a.y;
+    z = a.z;
+    return *this;
+};
+
 template <typename T> T Vec3<T>::length() {
     return sqrt(length2());
 }

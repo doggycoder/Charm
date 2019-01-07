@@ -47,6 +47,10 @@ public:
 
     Vec3 operator-(Vec3& a);
 
+    Vec3 operator-();
+
+    Vec3& operator=(Vec3 a);
+
     Vec3&operator*=(float scale);
 
     Vec3& normalize();
