@@ -127,3 +127,16 @@ template <typename T, int val> Vec4<T,val>::Vec4(Vec3<T> &in, T d) {
     z = in.z;
     w = d;
 }
+
+template <typename T, int val> Vec4<T,val> Vec4<T,val>::operator+(Vec4 &a) {
+    return {x+a.x,y+a.y,z+a.z,w+a.w};
+}
+
+
+template <typename T, int val> Vec4<T,val>& Vec4<T,val>::operator=(Vec4 a) {
+    this->x = a.x;
+    this->y = a.y;
+    this->z = a.z;
+    this->w = a.w;
+    return *this;
+}

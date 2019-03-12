@@ -5,9 +5,7 @@
 #ifndef _ENGINE_OPENGL_GL_TOOL_H_
 #define _ENGINE_OPENGL_GL_TOOL_H_
 
-#define GLEW_STATIC
-#include "GL/glew.h"
-#include "GL/glut.h"
+#include "GLES2/gl2.h"
 
 class GlTool {
 public:

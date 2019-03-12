@@ -7,6 +7,7 @@ set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/output)
 
 add_subdirectory(engine)
 add_subdirectory(test)
+add_subdirectory(application)
 
 include_directories(engine)
 include_directories(test)

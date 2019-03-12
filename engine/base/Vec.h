@@ -5,7 +5,7 @@
 #ifndef _CHARM_VEC_H_
 #define _CHARM_VEC_H_
 
-#include "cmath"
+#include <cmath>
 
 template <typename T>
 class Vec2{
@@ -80,6 +80,11 @@ public:
     explicit Vec4(T d = val);
 
     explicit Vec4(Vec3<T>& in,T d = val);
+
+    Vec4 operator+(Vec4& a);
+
+    Vec4& operator=(Vec4 a);
+
 };
 
 typedef Vec2<double>                Vec2d;
