@@ -6,3 +6,5 @@
 #include "ssColorAndMatrix.vert"
 #include "ssColor.frag"
 #include "ssColor.vert"
+#include "ssImage.vert"
+#include "ssImage.frag"

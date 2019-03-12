@@ -45,3 +45,23 @@ GLuint GlTool::compile(std::string vert, std::string frag) {
     }
     return program;
 }
+
+GLint GlTool::getUniformLocation(GLuint programId, const char * name) {
+    return glGetUniformLocation(programId,name);
+}
+
+GLint GlTool::getAttribLocation(GLuint programId, const char *name) {
+    return glGetAttribLocation(programId,name);
+}
+
+GLint GlTool::createTexture() {
+    GLuint textureId = 0;
+    glGenTextures(1,&textureId);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,textureId);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+    return textureId;
+}

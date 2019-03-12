@@ -1,6 +1,6 @@
 #include <iostream>
 #include "ui_mainwindow.h"
-#include "test/QtGlDrawTest.h"
+#include "camera/QtCameraDrawer.h"
 
 
 int main(int argc, char *argv[]){
@@ -13,7 +13,8 @@ int main(int argc, char *argv[]){
     QMainWindow w;
     w.setWindowFlags(Qt::WindowFlags::enum_type::Dialog);
     Ui::MainWindow window;
-    auto * drawTest = new QtGlDrawTest();
+    std::string pa = "/home/wuwang/Desktop/801__360P.mp4";
+    auto * drawTest = new QtCameraDrawer(0);
     window.setupUi(&w);
     window.openGLWidget->setGlFunction(drawTest);
     w.show();
