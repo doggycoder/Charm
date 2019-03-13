@@ -7,6 +7,7 @@
 #include "Matrix.h"
 #include "Vec.h"
 #include "cmath"
+#include <stdarg.h>
 
 Matrix Matrix::createPerspectiveCamera(float fov, float aspect, float near, float far) {
     Matrix mat;
@@ -61,6 +62,25 @@ Matrix Matrix::createViewMatrix(float posX, float posY, float posZ, float target
     return mat;
 }
 
+Matrix Matrix::createImageMatrix(float imgWidth, float imgHeight, float viewWidth, float viewHeight, ScaleType type) {
+    Matrix mat;
+    float imgRate = imgWidth / imgHeight;
+    float viewRate = viewWidth / viewHeight;
+    if(imgRate > viewRate){
+        if(type == CENTER_CROP){
+            mat << imgRate/viewRate, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+        }else{
+            mat<< 1, 0, 0, 0, 0, viewRate/imgRate, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+        }
+    }else if(imgRate < viewRate){
+        if(type == CENTER_CROP){
+            mat << 1, 0, 0, 0, 0, (viewRate/imgRate), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+        }else{
+            mat << imgRate/viewRate, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+        }
+    }
+    return mat;
+}
 
 float& Matrix::operator[](int i) {
     return value[i];
@@ -199,4 +219,15 @@ Matrix& Matrix::transpose() {
 Matrix Matrix::copy() {
     Matrix temp = *this;
     return temp;
+}
+
+Matrix Matrix::operator<<(float a) {
+    currentPos = 0;
+    value[currentPos++] = a;
+    return *this;
+}
+
+Matrix Matrix::operator,(float a) {
+    value[currentPos++] = a;
+    return *this;
 }

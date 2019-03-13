@@ -5,7 +5,19 @@
 #ifndef _CHARM_BASE_MATRIX_H_
 #define _CHARM_BASE_MATRIX_H_
 
+enum ScaleType{
+    CENTER_INSIDE,
+    CENTER_CROP,
+    FIX_XY,
+    START_CROP,
+    END_CROP,
+    FIT_START,
+    FIT_END
+};
+
 class Matrix {
+private:
+    int currentPos{0};
 protected:
     float value[16];
 public:
@@ -45,6 +57,10 @@ public:
 
     Matrix operator*(Matrix& mat);
 
+    Matrix operator<<(float a);
+
+    Matrix operator,(float);
+
     Matrix& scale(float x,float y,float z);
     Matrix& scale(float scale);
     Matrix& translate(float x,float y,float z);
@@ -62,6 +78,8 @@ public:
     static Matrix createOrthogonalCamera(float left,float right,float up,float down,float near,float far);
 
     static Matrix createPerspectiveCamera(float fov,float aspect,float near,float far);
+
+    static Matrix createImageMatrix(float imgWidth,float imgHeight,float viewWidth,float viewHeight,ScaleType type = CENTER_CROP);
 
 };
 

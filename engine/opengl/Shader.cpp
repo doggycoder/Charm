@@ -8,3 +8,4 @@
 #include "ssColor.vert"
 #include "ssImage.vert"
 #include "ssImage.frag"
+#include "ssImageAndMatrix.vert"

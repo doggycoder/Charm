@@ -10,5 +10,6 @@ extern const char * ssFragColor;
 extern const char * ssVertexColor;
 extern const char * ssFragImage;
 extern const char * ssVertexImage;
+extern const char * ssVertexImageMatrix;
 
 #endif //CHARM_SHADER_H

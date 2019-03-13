@@ -6,6 +6,7 @@
 #define _CHARM_QT_CAMERA_DRAWER_H_
 
 #include <opencv2/opencv.hpp>
+#include <engine/base/Matrix.h>
 #include "qt/glwidget/GlWidget.h"
 #include "base/Base.h"
 
@@ -16,8 +17,12 @@ private:
     GLint textureHandler;
     GLint vertexHandler;
     GLint coordHandler;
+    GLint matrixHandler;
     GLuint textureId;
     float coord[16];
+    Matrix mat;
+    int width;
+    int height;
 public:
     explicit QtCameraDrawer(int index = 0);
 

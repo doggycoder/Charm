@@ -28,15 +28,17 @@ coord{
 }
 
 void QtCameraDrawer::glInit() {
-    programHandler = GlTool::compile(ssVertexImage,ssFragImage);
+    programHandler = GlTool::compile(ssVertexImageMatrix,ssFragImage);
     textureHandler = GlTool::getUniformLocation(programHandler,"uTexture");
     vertexHandler = GlTool::getAttribLocation(programHandler,"aPosition");
     coordHandler = GlTool::getAttribLocation(programHandler,"aCoord");
+    matrixHandler = GlTool::getUniformLocation(programHandler,"uMatrix");
     textureId = GlTool::createTexture();
 }
 
 void QtCameraDrawer::glSizeChange(int width, int height) {
-
+    this->width = width;
+    this->height = height;
 }
 
 void QtCameraDrawer::glDraw() {
@@ -50,12 +52,16 @@ void QtCameraDrawer::glDraw() {
         glClearColor(0.7f,0.3f,0.2f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+        mat = Matrix::createImageMatrix(frame.cols,frame.rows,width,height);
+
         glUseProgram(programHandler);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,frame.cols,frame.rows,0,GL_RGB,GL_UNSIGNED_BYTE,frame.data);
         glUniform1i(textureHandler,0);
+
+        glUniformMatrix4fv(matrixHandler,1,GL_FALSE,mat.data());
 
         glEnableVertexAttribArray(static_cast<GLuint>(vertexHandler));
         glVertexAttribPointer(static_cast<GLuint>(vertexHandler), 2, GL_FLOAT, GL_FALSE, 16, &coord[0]);
