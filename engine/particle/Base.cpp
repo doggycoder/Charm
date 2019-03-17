@@ -41,7 +41,7 @@ void BaseEmitter::emitAtomIfNeeded() {
         //一个周期发射的粒子数目/发射时间*本帧耗时=实际发射速度
         int num = static_cast<int>(currentEmitSpeed * currentPeriod / currentEmitTime * frameTime);
         while(num-->0){
-            SPtr<Atom> atom = genAndInitAtom();
+            Atom * atom = genAndInitAtom();
             if(atom == nullptr){
                 return;
             }
@@ -51,22 +51,22 @@ void BaseEmitter::emitAtomIfNeeded() {
 
 }
 
-SPtr<Atom> BaseEmitter::genAtom() {
+Atom * BaseEmitter::genAtom() {
     if(livingAtoms.size() >= atomMaxNum){
         return nullptr;
     }
-    SPtr<Atom> d;
+    Atom * d;
     if(!cacheAtoms.empty()){
         d = cacheAtoms.front();
         cacheAtoms.pop();
     }else{
-        d = std::make_shared<Atom>();
+        d = new Atom();
     }
     return d;
 }
 
-SPtr<Atom> BaseEmitter::genAndInitAtom() {
-    SPtr<Atom> atom = genAtom();
+Atom * BaseEmitter::genAndInitAtom() {
+    Atom * atom = genAtom();
     if(atom != nullptr){
         atom->startColor = atomStartColor.genRate();
         atom->currentColor = atom->startColor;

@@ -19,8 +19,8 @@ public:
     void draw();
 
 private:
-    SPtr<Cube> cube;
-    SPtr<Rect> rect;
+    std::shared_ptr<Cube> cube;
+    std::shared_ptr<Rect> rect;
     int programId;
     int glVert;
     int glColor;

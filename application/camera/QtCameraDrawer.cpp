@@ -15,6 +15,10 @@ coord{
     -1.0f,-1.0f,0.0f,0.0f
 }{
     capture.open(index);
+    attrData.data = coord;
+    attrData.stride = 16;
+    attrData.addGlAttrInfo(2,0,GlAttrName::POSITION);
+    attrData.addGlAttrInfo(2,2*sizeof(float),GlAttrName::COORD);
 }
 
 QtCameraDrawer::QtCameraDrawer(std::string &path):
@@ -25,14 +29,15 @@ coord{
 -1.0f,-1.0f,0.0f,0.0f
 } {
     capture.open(path);
+    attrData.data = coord;
+    attrData.stride = 16;
+    attrData.addGlAttrInfo(2,0,GlAttrName::POSITION);
+    attrData.addGlAttrInfo(2,2,GlAttrName::COORD);
 }
 
 void QtCameraDrawer::glInit() {
-    programHandler = GlTool::compile(ssVertexImageMatrix,ssFragImage);
-    textureHandler = GlTool::getUniformLocation(programHandler,"uTexture");
-    vertexHandler = GlTool::getAttribLocation(programHandler,"aPosition");
-    coordHandler = GlTool::getAttribLocation(programHandler,"aCoord");
-    matrixHandler = GlTool::getUniformLocation(programHandler,"uMatrix");
+    program = manager.getProgram(ssVertexImageMatrix,ssFragImage);
+    program->setAttrData(attrData);
     textureId = GlTool::createTexture();
 }
 
@@ -54,25 +59,13 @@ void QtCameraDrawer::glDraw() {
 
         mat = Matrix::createImageMatrix(frame.cols,frame.rows,width,height);
 
-        glUseProgram(programHandler);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,frame.cols,frame.rows,0,GL_RGB,GL_UNSIGNED_BYTE,frame.data);
-        glUniform1i(textureHandler,0);
-
-        glUniformMatrix4fv(matrixHandler,1,GL_FALSE,mat.data());
-
-        glEnableVertexAttribArray(static_cast<GLuint>(vertexHandler));
-        glVertexAttribPointer(static_cast<GLuint>(vertexHandler), 2, GL_FLOAT, GL_FALSE, 16, &coord[0]);
-        glEnableVertexAttribArray(static_cast<GLuint>(coordHandler));
-        glVertexAttribPointer(static_cast<GLuint>(coordHandler), 2, GL_FLOAT, GL_FALSE, 16, &coord[2]);
-        glDrawArrays(GL_TRIANGLE_STRIP,0,4);
-        glDisableVertexAttribArray(static_cast<GLuint>(vertexHandler));
-        glDisableVertexAttribArray(static_cast<GLuint>(coordHandler));
+        program->prepare();
+        program->setTexture2D(hGlTexture,textureId,frame.cols,frame.rows,frame.data);
+        program->setParam(hGlMatrix,mat);
+        program->render();
     }
 }
 
 void QtCameraDrawer::glDestroy() {
-
+    manager.delProgram(&program);
 }

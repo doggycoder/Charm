@@ -6,10 +6,9 @@
 #include <iostream>
 #include "GlTool.h"
 
-GLuint GlTool::loadShader(GLuint type, std::string shader) {
+GLuint GlTool::loadShader(GLuint type, const char * shader) {
     GLuint ret = glCreateShader(type);
-    const char * shaderData = shader.c_str();
-    glShaderSource(ret, 1, &shaderData, nullptr);
+    glShaderSource(ret, 1, &shader, nullptr);
     glCompileShader(ret);
     GLint compileRet{0};
     glGetShaderiv(ret,GL_COMPILE_STATUS,&compileRet);
@@ -25,12 +24,13 @@ GLuint GlTool::loadShader(GLuint type, std::string shader) {
     return ret;
 }
 
-GLuint GlTool::compile(std::string vert, std::string frag) {
-    GLuint vertShaderId = loadShader(GL_VERTEX_SHADER, std::move(vert));
-    GLuint fragShaderId = loadShader(GL_FRAGMENT_SHADER, std::move(frag));
+GLuint GlTool::linkProgram(GLuint vert, GLuint frag) {
+    if(vert == 0 || frag == 0){
+        return 0;
+    }
     GLuint program = glCreateProgram();
-    glAttachShader(program, fragShaderId);
-    glAttachShader(program, vertShaderId);
+    glAttachShader(program, vert);
+    glAttachShader(program, frag);
     glLinkProgram(program);
     GLint linkRet{0};
     glGetProgramiv(program,GL_LINK_STATUS,&linkRet);
@@ -44,6 +44,12 @@ GLuint GlTool::compile(std::string vert, std::string frag) {
         return 0;
     }
     return program;
+}
+
+GLuint GlTool::compile(const char * vert, const char * frag) {
+    GLuint vertShaderId = loadShader(GL_VERTEX_SHADER, vert);
+    GLuint fragShaderId = loadShader(GL_FRAGMENT_SHADER, frag);
+    return GlTool::linkProgram(vertShaderId,fragShaderId);
 }
 
 GLint GlTool::getUniformLocation(GLuint programId, const char * name) {

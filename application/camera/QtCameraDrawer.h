@@ -9,20 +9,21 @@
 #include <engine/base/Matrix.h>
 #include "qt/glwidget/GlWidget.h"
 #include "base/Base.h"
+#include "opengl/GlProgram.h"
 
 class QtCameraDrawer : public GlWidgetFunction {
 private:
     cv::VideoCapture capture;
-    GLuint programHandler;
-    GLint textureHandler;
-    GLint vertexHandler;
-    GLint coordHandler;
-    GLint matrixHandler;
     GLuint textureId;
     float coord[16];
     Matrix mat;
     int width;
     int height;
+    GlProgramManager manager;
+    GlProgram * program;
+    GlParam     hGlTexture = GlParam("uTexture");
+    GlParam     hGlMatrix  = GlParam("uMatrix");
+    GlAttrData attrData;
 public:
     explicit QtCameraDrawer(int index = 0);
 

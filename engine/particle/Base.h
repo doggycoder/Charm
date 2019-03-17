@@ -72,13 +72,13 @@ protected:
     uint32_t atomMaxNum{};                   //支持的最大粒子个数
     AtomBlendType blendType{eABT_NONE};      //发射出的粒子的融合方式
 
-    std::vector<SPtr<Atom>> livingAtoms;
-    std::queue<SPtr<Atom>> cacheAtoms;
+    std::vector<Atom*> livingAtoms;
+    std::queue<Atom*> cacheAtoms;
 
 protected:
 
-    virtual SPtr<Atom> genAtom();
-    virtual SPtr<Atom> genAndInitAtom();
+    virtual Atom * genAtom();
+    virtual Atom * genAndInitAtom();
     virtual void emitAtomIfNeeded();
 
 public:
