@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 project(QTTool)
 
+set(Qt5_DIR ${QT5_PATH})
+
 find_package(Qt5 REQUIRED Widgets Core)
 
 add_definitions(-std=c++11)

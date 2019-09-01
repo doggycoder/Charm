@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 project(QtFaceResearch)
 
+set(Qt5_DIR ${QT5_PATH})
+
 add_definitions(-std=c++11)
 add_subdirectory(../qt qt.out)
 include_directories(../)
