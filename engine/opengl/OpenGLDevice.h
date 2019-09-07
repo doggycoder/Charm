@@ -25,6 +25,8 @@ public:
     void        setParam(uint64_t program, MParam& key, Vec4f& t) override;
     void        setParam(uint64_t program, MParam& key, float * value, uint32_t unitCount, uint32_t unitSize) override;
     void        setParam(uint64_t program, MParam& key, Matrix& mat) override;
+    void        setAttribute(uint64_t program, MParam& key, AttributeType &type, uint32_t stride,
+                         float * data, uint32_t dataLength, uint32_t updateOffset = 0);
     bool        checkParam(uint64_t programId, MParam& key) override;
 };
 

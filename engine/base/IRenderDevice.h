@@ -10,6 +10,27 @@
 #include "MParam.h"
 #include <string>
 
+enum DrawType{
+    eDT_Element = 0x0000,
+    eDT_Points = 0x0001,
+    eDT_Lines,
+    eDT_LineLoop,
+    eDT_LineStrip,
+    eDT_Triangles,
+    eDT_TriangleFan,
+    eDT_TriangleStrip,
+    eDT_Array = 0x1000,
+};
+
+class AttributeType{
+public:
+    AttributeType(uint8_t size,std::string name)
+            :size(size),name(std::move(name)){}
+
+    uint8_t size{3};
+    std::string name;
+};
+
 class IRenderDevice {
 public:
 

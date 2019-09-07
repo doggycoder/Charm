@@ -11,6 +11,28 @@
 const char * OpenGLDevice::vsCodeHeader = "#define CODE_TYPE_VS";
 const char * OpenGLDevice::psCodeHeader = "#define CODE_TYPE_PS";
 
+GLenum getDrawType(DrawType type){
+    int t = type & (~eDT_Array);
+    switch (t){
+        case eDT_Points:
+            return GL_POINTS;
+        case eDT_Lines:
+            return GL_LINES;
+        case eDT_LineLoop:
+            return GL_LINE_LOOP;
+        case eDT_LineStrip:
+            return GL_LINE_STRIP;
+        case eDT_Triangles:
+            return GL_TRIANGLES;
+        case eDT_TriangleFan:
+            return GL_TRIANGLE_FAN;
+        case eDT_TriangleStrip:
+            return GL_TRIANGLE_STRIP;
+        default:
+            return GL_POINTS;
+    }
+}
+
 void OpenGLDevice::open() {
 
 }
@@ -114,16 +136,69 @@ void OpenGLDevice::setParam(uint64_t program, MParam& key, Matrix &mat) {
 bool OpenGLDevice::checkParam(uint64_t program,MParam &key) {
     if(key.state == MParam::State::eMPS_OK){
         return true;
-    } else if(key.state == MParam::State::eMPS_UNINIT){
-        GLint keyId = glGetUniformLocation(static_cast<GLuint>(program), key.name.c_str());
-        if(keyId == -1){
-            key.state = MParam::State::eMPS_ERROR;
-            return false;
-        }else{
-            key.state = MParam::State::eMPS_OK;
-            key.key = static_cast<uint64_t>(keyId);
-            return true;
+    } else if(key.state == MParam::State::eMPS_UnInit){
+        GLint (*getLocation[3])(GLuint p,const char* n) = {
+                glGetUniformLocation,glGetAttribLocation,glGetAttribLocation
+        };
+        if(key.type != MParam::eMPT_Unknown){
+            GLint keyId = getLocation[key.type](static_cast<GLuint>(program), key.name.c_str());
+            if(keyId == -1){
+                key.state = MParam::State::eMPS_ERROR;
+                return false;
+            }else{
+                key.state = MParam::State::eMPS_OK;
+                key.key = static_cast<uint64_t>(keyId);
+                return true;
+            }
         }
     }
     return false;
+}
+
+void OpenGLDevice::setAttribute(uint64_t program, MParam& key, AttributeType &type, uint32_t stride,
+        float * data, uint32_t dataLength, uint32_t updateOffset){
+    if(key.type != MParam::eMPT_Attribute && key.type != MParam::eMPT_AttributeWithBo){
+        return;
+    }
+    if(checkParam(program, key)){
+        if(key.type == MParam::eMPT_AttributeWithBo){
+            //又没有数据，又没有vbo，不向下执行了
+            if(key.extra == 0 && !data){
+                return;
+            }
+            if(key.extra == 0){
+                GLuint bufferId = 0;
+                glGenBuffers(1, &bufferId);
+                key.extra = bufferId;
+                glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(key.extra));
+                glBufferData(GL_ARRAY_BUFFER, dataLength, data, GL_STATIC_DRAW);
+            }else{
+                glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(key.extra));
+                if(data){
+                    glBufferSubData(GL_ARRAY_BUFFER, updateOffset, dataLength, data);
+                }
+            }
+            glEnableVertexAttribArray(static_cast<GLuint>(key.key));
+            glVertexAttribPointer(static_cast<GLuint>(key.key), type.size, GL_FLOAT, GL_FALSE, stride, nullptr);
+        }else if(key.type == MParam::eMPT_Attribute){
+            glEnableVertexAttribArray(static_cast<GLuint>(key.key));
+            glVertexAttribPointer(static_cast<GLuint>(key.key), type.size, GL_FLOAT, GL_FALSE, stride, data);
+        }
+    }
+}
+
+void setIndexes(uint64_t program, MParam& key, AttributeType &type, uint32_t stride,
+                float * data, uint32_t dataLength, uint32_t updateOffset){
+    GLuint bufferId = 0;
+    glGenBuffers(1, &bufferId);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId);
+
+}
+
+void render(uint64_t program, DrawType type, uint32_t count){
+    if(type > DrawType::eDT_Array){
+        glDrawArrays(getDrawType(type), 0, count);
+    }else{
+        glDrawElements(getDrawType(type), count, GL_UNSIGNED_INT, nullptr);
+    }
 }

@@ -30,6 +30,7 @@ public:
     SPtr(SPtr<T> &t):realPointer(t.realPointer){
         ++realPointer->count;
     }
+
     SPtr<T>& operator=(const SPtr<T> &t){
         ++t.realPointer->count;
         if (realPointer && --realPointer->count <= 0)
@@ -37,6 +38,13 @@ public:
         realPointer = t.realPointer;
         return *this;
     }
+
+    SPtr<T>&operator=(T * t){
+        if (realPointer && --realPointer->count <= 0)
+            delete realPointer;
+        realPointer = new Ptr<T>(t);
+    }
+
     ~SPtr(){
         if(realPointer){
             if(--realPointer->count <= 0){
@@ -52,6 +60,10 @@ public:
     T &operator*(){
         return *(realPointer->t);
     };
+
+    explicit operator bool(){
+        return realPointer == nullptr || realPointer->t == nullptr;
+    }
 
     int count(){
         if(realPointer){

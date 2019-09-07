@@ -12,7 +12,7 @@
 #include <typeinfo>
 #include <map>
 
-class Material {
+class Material : public IResObj {
 private:
     using NxNf = std::tuple<float *, uint32_t, uint32_t>;
     std::map<MParam, float> paramFloat;
@@ -24,6 +24,7 @@ private:
     std::map<MParam, ResPtr<Texture>> paramTexture;
 
     SPtr<Shader>    shader;
+
 public:
     virtual void setShader(SPtr<Shader> shader);
 
