@@ -53,6 +53,10 @@ public:
         }
     }
 
+    T* get(){
+        return realPointer->t;
+    }
+
     T *operator->(){
         return (realPointer->t);
     }
@@ -62,7 +66,7 @@ public:
     };
 
     explicit operator bool(){
-        return realPointer == nullptr || realPointer->t == nullptr;
+        return true;
     }
 
     int count(){

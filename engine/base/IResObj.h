@@ -18,7 +18,7 @@ public:
         }
     }
 
-    virtual void onLoad() = 0;
+    virtual void onLoad(){};
 
     virtual const char * getName(){ return name.c_str();}
 };
@@ -39,11 +39,16 @@ public:
 private:
     T * t{nullptr};
 public:
-    ResPtr(T * t){
+    explicit ResPtr(T * t){
         this->t = t;
     }
+
+    ResPtr() = default;
 
     ResPtr<T>&operator=(T * t){
 
     }
+    ResPtr<T>&operator=(ResPtr<T> res){
+        this->t = res.t;
+    };
 };

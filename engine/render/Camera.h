@@ -19,7 +19,7 @@ private:
     RectF  rect;
 public:
     void setViewPort(float x,float y,float width,float height);
-    Vec2f worldToSceen(Vec3f& point);
+    Vec2f worldToScreen(Vec3f& point);
 };
 
 

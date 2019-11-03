@@ -22,16 +22,23 @@ public:
     };
 
     std::string name;
-    uint64_t key{0};
+    int key{-1};
     Type type{eMPT_Unknown};
     State state{eMPS_UnInit};
     uint64_t extra{0};
 
 public:
-    explicit MParam(char * name):name(name){
+    explicit MParam(const char * name, Type type = eMPT_Uniform):name(name), type(type){
 
     }
 
+    MParam() = default;
+
+    bool operator<(const MParam& right) const;
+    bool operator>(const MParam& right) const;
+    bool operator==(const MParam& right) const;
+    bool operator>=(const MParam& right) const;
+    bool operator<=(const MParam& right) const;
     bool operator<(MParam& right);
     bool operator>(MParam& right);
     bool operator==(MParam& right);

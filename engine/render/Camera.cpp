@@ -57,7 +57,7 @@ void Camera::setViewPort(float x, float y, float width, float height) {
 //    return screenPoint;
 //}
 
-Vec2f Camera::worldToSceen(Vec3f &point) {
+Vec2f Camera::worldToScreen(Vec3f &point) {
     Vec2f vec;
     vec.x = point.x;
     Vec4f wPoint(point);

@@ -26,7 +26,13 @@ private:
     SPtr<Shader>    shader;
 
 public:
-    virtual void setShader(SPtr<Shader> shader);
+    Material() = default;
+
+    virtual void setShader(SPtr<Shader>& shader);
+
+    void init(IContext* context) override;
+
+    void onLoad() override;
 
     virtual void setParam(MParam& param, float value);
 
@@ -43,5 +49,7 @@ public:
     virtual void setParam(MParam& param, ResPtr<Texture> texture);
 
     virtual bool apply();
+
+    virtual uint64_t getProgramId(){ return shader->getProgramId();};
 
 };

@@ -5,19 +5,30 @@
 #ifndef _ENGINE_RENDER_RENDER_H_
 #define _ENGINE_RENDER_RENDER_H_
 
-#include "Material.h"
+#include <base/Base.h>
+#include <base/MParam.h>
+#include "RenderName.h"
 
 class Model;
+class Mesh;
+class Material;
+class IContext;
 
 class Renderer {
 private:
-    Model * model{nullptr};
+    Material * defaultMaterial{nullptr};
+    IContext * context{nullptr};
+
+    MParam paramWorldMat = MParam(uWorldMatrix);
 
     void drawModel(Model * model);
 public:
-    void setModel(Model * model){this->model = model;};
-    void setMaterial(SPtr<Material> material, const char * name = nullptr);
-    void render();
+    Renderer();
+    ~Renderer();
+
+    void init(IContext* context);
+    void renderMesh(Mesh* mesh, Material* material = nullptr);
+    void renderModel(Model* model);
 };
 
 #endif //_ENGINE_RENDER_RENDER_H_

@@ -11,12 +11,12 @@
 
 class Shader : public IResObj {
 private:
-    char * code;
+    const char * code{nullptr};
     uint64_t programId{0};
     bool isLoaded{false};
     IRenderDevice * device{nullptr};
 public:
-    explicit Shader(char * code):code(code){};
+    explicit Shader(const char * code):code(code){};
     ~Shader();
 
     void    init(IContext * context) override;
@@ -36,4 +36,6 @@ public:
     virtual void setParam(MParam& param, Matrix &mat);
 
     virtual void setParam(MParam& param, ResPtr<Texture> texture);
+
+    virtual uint64_t getProgramId(){ return programId;};
 };

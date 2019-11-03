@@ -92,6 +92,11 @@ uint64_t OpenGLDevice::compile(const char *code) {
     return programId;
 }
 
+void OpenGLDevice::clear(Color4f c) {
+    glClearColor(c.x, c.y, c.z, c.w);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void OpenGLDevice::setParam(uint64_t program, MParam& key, float t) {
     if(checkParam(program, key)){
         glUniform1f(static_cast<GLint>(key.key), t);
@@ -155,7 +160,7 @@ bool OpenGLDevice::checkParam(uint64_t program,MParam &key) {
     return false;
 }
 
-void OpenGLDevice::setAttribute(uint64_t program, MParam& key, AttributeType &type, uint32_t stride,
+void OpenGLDevice::setVertexes(uint64_t program, MParam& key, AttributeType &type, uint32_t stride,
         float * data, uint32_t dataLength, uint32_t updateOffset){
     if(key.type != MParam::eMPT_Attribute && key.type != MParam::eMPT_AttributeWithBo){
         return;
@@ -174,28 +179,37 @@ void OpenGLDevice::setAttribute(uint64_t program, MParam& key, AttributeType &ty
                 glBufferData(GL_ARRAY_BUFFER, dataLength, data, GL_STATIC_DRAW);
             }else{
                 glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(key.extra));
-                if(data){
+                if(updateOffset > 0){
                     glBufferSubData(GL_ARRAY_BUFFER, updateOffset, dataLength, data);
                 }
             }
             glEnableVertexAttribArray(static_cast<GLuint>(key.key));
-            glVertexAttribPointer(static_cast<GLuint>(key.key), type.size, GL_FLOAT, GL_FALSE, stride, nullptr);
+            glVertexAttribPointer(static_cast<GLuint>(key.key), type.size, GL_FLOAT, GL_FALSE, stride, (void *)(sizeof(float) * type.offset));
         }else if(key.type == MParam::eMPT_Attribute){
             glEnableVertexAttribArray(static_cast<GLuint>(key.key));
-            glVertexAttribPointer(static_cast<GLuint>(key.key), type.size, GL_FLOAT, GL_FALSE, stride, data);
+            glVertexAttribPointer(static_cast<GLuint>(key.key), type.size, GL_FLOAT, GL_FALSE, stride, data + type.offset);
         }
     }
 }
 
-void setIndexes(uint64_t program, MParam& key, AttributeType &type, uint32_t stride,
-                float * data, uint32_t dataLength, uint32_t updateOffset){
-    GLuint bufferId = 0;
-    glGenBuffers(1, &bufferId);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId);
-
+void OpenGLDevice::setIndexes(uint64_t& ibo, uint32_t* data, uint32_t dataLength, uint32_t updateOffset, bool update){
+    if(ibo == 0){
+        GLuint bufferId = 0;
+        glGenBuffers(1, &bufferId);
+        ibo = bufferId;
+    }
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(ibo));
+    if(update){
+        if(updateOffset == 0){
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, dataLength, data, GL_STATIC_DRAW);
+        }else{
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, updateOffset, dataLength, data);
+        }
+    }
 }
 
-void render(uint64_t program, DrawType type, uint32_t count){
+void OpenGLDevice::render(uint64_t program, DrawType type, uint32_t count){
+    glUseProgram(static_cast<GLuint>(program));
     if(type > DrawType::eDT_Array){
         glDrawArrays(getDrawType(type), 0, count);
     }else{

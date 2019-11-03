@@ -1,1 +1,0 @@
-aux_source_directory(glwidget SRC_GL_WIDGET)

@@ -1,1 +1,0 @@
-set(SRC_WINDOW window/GlfwWindow.cpp)

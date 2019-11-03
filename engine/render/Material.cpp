@@ -4,8 +4,20 @@
 
 #include "Material.h"
 
-void Material::setShader(SPtr<Shader> shader) {
+void Material::setShader(SPtr<Shader>& shader) {
     this->shader = shader;
+}
+
+void Material::init(IContext *context) {
+    if(shader){
+        shader->init(context);
+    }
+}
+
+void Material::onLoad() {
+    if(shader){
+        shader->onLoad();
+    }
 }
 
 void Material::setParam(MParam &param, float t) {

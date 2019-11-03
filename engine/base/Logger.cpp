@@ -4,6 +4,8 @@
 
 #include "Logger.h"
 
+Logger::InnerLogger Logger::out; // NOLINT
+
 void Logger::InnerLogger::log(LoggerType type, int key, const char *info, void *extra) {
     if(output){
         output(type, key, info, extra);
